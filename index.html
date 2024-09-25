@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counterfeit Note Detection</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: #333333;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #666666;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-section {
+            margin-bottom: 2rem;
+        }
+
+        .upload-container {
+            position: relative;
+            border: 2px dashed #cccccc;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+        }
+
+        .upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 1.2rem;
+            color: #666666;
+        }
+
+        .upload-label i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #note-image {
+            display: none;
+        }
+
+        #image-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        #scan-button {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #scan-button:hover {
+            background-color: #218838;
+        }
+
+        .result-section {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-section h2 {
+            font-size: 1.5rem;
+            color: #333333;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-section p {
+            font-size: 1.2rem;
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Counterfeit Note Detection</h1>
+            <p>Upload an image of a currency note to compare its similarity with a reference note.</p>
+        </header>
+        <div class="upload-section">
+            <form id="upload-form" method="POST" enctype="multipart/form-data">
+                <input type="file" id="note-image" name="file" accept="image/*">
+                <label for="note-image" class="upload-label">
+                    <i class="fas fa-upload"></i>
+                    <span>Choose Image</span>
+                </label>
+                <button type="submit" id="scan-button">Scan Note</button>
+            </form>
+        </div>
+
+        <!-- Section to display the result -->
+        <div class="result-section" id="result-section">
+            <h2>Result:</h2>
+            <p id="result-text">Similarity: 0%</p>
+        </div>
+    </div>
+
+    <script>
+        // Add an event listener for form submission
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission behavior
+
+            // Get the form data (file)
+            const formData = new FormData(this);
+
+            // Use fetch API to send the image to the backend for comparison
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the result
+                document.getElementById('result-section').style.display = 'block';
+                document.getElementById('result-text').textContent = Similarity: ${data.similarity};
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
